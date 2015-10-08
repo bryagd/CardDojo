@@ -51,7 +51,7 @@ namespace dojo.CardShuffle.Tests
         }
 
         [TestMethod]
-        public void Shuffle_Two_Deck_To_Insure_Decks_Are_Random()
+        public void Shuffle_Two_Decks_To_Insure_Decks_Are_Random()
         {
             var deck = new Deck();
             var deck1 = deck.DeckBuilder();
@@ -60,7 +60,11 @@ namespace dojo.CardShuffle.Tests
             var shuffledDeck1 = deck.Shuffle(deck1);
             var shuffledDeck2 = deck.Shuffle(deck2);
 
-            Assert.AreNotEqual(shuffledDeck1, shuffledDeck2);
+            Assert.AreEqual(true,(shuffledDeck1[0] != shuffledDeck2[0] ||
+                                  shuffledDeck1[1] != shuffledDeck2[1] ||
+                                  shuffledDeck1[2] != shuffledDeck2[2] ||
+                                  shuffledDeck1[3] != shuffledDeck2[3] ||
+                                  shuffledDeck1[4] != shuffledDeck2[4]));
         }
     }
 }
