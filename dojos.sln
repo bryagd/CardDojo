@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dojo.CardShuffle", "src\doj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dojo.CardShuffle.Tests", "src\dojo.CardShuffle.Tests\dojo.CardShuffle.Tests.csproj", "{E2FC3BF0-E5F6-43E2-AA66-2741BDBB23C7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{31D4110E-903A-4AAE-9018-7C7AF1706C8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

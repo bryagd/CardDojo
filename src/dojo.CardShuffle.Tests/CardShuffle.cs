@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace dojo.CardShuffle.Tests
 {
@@ -13,7 +16,6 @@ namespace dojo.CardShuffle.Tests
 
             Assert.AreEqual(expectedLenth, deck.DeckBuilder().Length);
         }
-
         [TestMethod]
         public void IsDeckValid_Should_Return_False()
         {
@@ -26,7 +28,6 @@ namespace dojo.CardShuffle.Tests
 
             Assert.IsFalse(deck.IsDeckValid(cards));
         }
-
         [TestMethod]
         public void Deck_Should_Be_Without_Duplicates_After_Shuffle()
         {
@@ -35,36 +36,103 @@ namespace dojo.CardShuffle.Tests
 
             Assert.IsTrue(deck.IsDeckValid(shuffledDeck));
         }
-
         [TestMethod]
-        public void Shffle_Ordered_Deck()
+        public void Shuffle_Ordered_Deck_And_Return_False_If_Deck_Are_Not_Shuffled()
         {
             var deck = new Deck();
             var orderedDeck = deck.DeckBuilder();
             var shuffledDeck = deck.Shuffle(deck.DeckBuilder());
 
-            Assert.AreEqual(true, (orderedDeck[0] != shuffledDeck[0] ||
-                                   orderedDeck[1] != shuffledDeck[1] ||
-                                   orderedDeck[2] != shuffledDeck[2] ||
-                                   orderedDeck[3] != shuffledDeck[3] ||
-                                   orderedDeck[4] != shuffledDeck[4]));
+            Assert.IsFalse(Deck.AreDeckEquals(orderedDeck, shuffledDeck));
+        }
+
+#region Duplicated tests for second shuffle method
+
+        [TestMethod]
+        public void Shuffle2_Ordered_Deck_And_Return_False_If_Deck_Are_Not_Shuffled()
+        {
+            var deck = new Deck();
+            var orderedDeck = deck.DeckBuilder();
+            var shuffledDeck = deck.Shuffle2(deck.DeckBuilder());
+
+            Assert.IsFalse(Deck.AreDeckEquals(orderedDeck,shuffledDeck));
         }
 
         [TestMethod]
-        public void Shuffle_Two_Decks_To_Insure_Decks_Are_Random()
+        public void Shuffle_Two_Decks_To_Insure_Decks_Are_Random_Should_Return_False()
+        {
+            var deck = new Deck();
+            var shuffledDeck1 = deck.Shuffle(deck.DeckBuilder());
+            var shuffledDeck2 = deck.Shuffle(deck.DeckBuilder());
+
+            Assert.IsFalse(Deck.AreDeckEquals(shuffledDeck1,shuffledDeck2));
+        }
+
+        [TestMethod]
+        public void Shuffle_Two_Decks_To_Insure_Decks_Are_Random_Should_Return_True()
+        {
+            var deck = new Deck();
+            var shuffledDeck1 = deck.Shuffle(deck.DeckBuilder());
+            var shuffledDeck2 = deck.Shuffle(deck.DeckBuilder());
+
+            Assert.IsFalse(Deck.AreDeckEquals(shuffledDeck1, shuffledDeck2));
+        }
+
+        [TestMethod]
+        public void Shuffle2_Deck_Should_Return_Two_Random_Decks_Should_Return_False()
+        {
+            var interval = new TimeSpan(0,0,1);
+            var deck = new Deck();
+            var shuffledDeck1 = deck.Shuffle2(deck.DeckBuilder());
+            Thread.Sleep(interval);
+            var shuffledDeck2 = deck.Shuffle2(deck.DeckBuilder());
+
+            Assert.IsFalse(Deck.AreDeckEquals(shuffledDeck1, shuffledDeck2));
+        }
+
+        [TestMethod]
+        public void Shuffle2_Deck_Should_Return_Two_Random_Decks_Should_Fail_Due_Randon_Seeding()
+        {
+
+            var deck = new Deck();
+            var shuffledDeck1 = deck.Shuffle2(deck.DeckBuilder());
+            var shuffledDeck2 = deck.Shuffle2(deck.DeckBuilder());
+            Assert.IsFalse(Deck.AreDeckEquals(shuffledDeck1, shuffledDeck2));
+        }
+
+
+        [TestMethod]
+        public void DecksEqual_Should_Return_True()
         {
             var deck = new Deck();
             var deck1 = deck.DeckBuilder();
-            var deck2 = deck.DeckBuilder();
 
-            var shuffledDeck1 = deck.Shuffle(deck1);
-            var shuffledDeck2 = deck.Shuffle(deck2);
-
-            Assert.AreEqual(true,(shuffledDeck1[0] != shuffledDeck2[0] ||
-                                  shuffledDeck1[1] != shuffledDeck2[1] ||
-                                  shuffledDeck1[2] != shuffledDeck2[2] ||
-                                  shuffledDeck1[3] != shuffledDeck2[3] ||
-                                  shuffledDeck1[4] != shuffledDeck2[4]));
+            Assert.IsTrue(Deck.AreDeckEquals(deck1,deck1));
         }
+
+        [TestMethod]
+        public void DecksEqual_Should_Return_False()
+        {
+            var deck = new Deck();
+            var deck1 = deck.DeckBuilder();
+            var deck2 = deck1.Reverse().ToArray();
+
+            Assert.IsFalse(Deck.AreDeckEquals(deck1,deck2));
+        }
+        [TestMethod]
+        public void Check_Shffuled_Deck_For_Each_Suit()
+        {
+            var deck = new Deck();
+            var shuffledDeck1 = deck.Shuffle2(deck.DeckBuilder());
+            var shuffledDeck2 = deck.Shuffle2(deck.DeckBuilder());
+
+            var suits = shuffledDeck2.GroupBy(s => s.Suit);
+
+            Assert.IsNotNull(suits);
+
+        }
+
+
+#endregion
     }
 }
